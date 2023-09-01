@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.decorators import action
 from django.contrib.auth import authenticate
-from rest_framework import viewsets
+from drf_yasg import openapi
 
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
@@ -21,6 +21,15 @@ class UserRegistrationView(APIView):
         methods=['post'],
         operation_description="Register a new user in the application.",
         responses={201: "Successful response", 400: "Invalid registration"},
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'username': openapi.Schema(type=openapi.TYPE_STRING, description='Username'),
+                'email': openapi.Schema(type=openapi.TYPE_STRING, description='Email'),
+                'password': openapi.Schema(type=openapi.TYPE_STRING, description='Password'),
+            },
+            required=['username, email, password'],
+        )
     )
     @action(detail=False, methods=['post'])
     def post(self, request):
@@ -35,6 +44,14 @@ class LoginView(ObtainAuthToken):
         methods=['post'],
         operation_description="User login.",
         responses={200: "Successful response", 400: "Invalid login"},
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'username': openapi.Schema(type=openapi.TYPE_STRING, description='Username'),
+                'password': openapi.Schema(type=openapi.TYPE_STRING, description='Password'),
+            },
+            required=['username, password'],
+        )
     )
     @action(detail=False, methods=['post'])
     def post(self, request):
@@ -69,6 +86,7 @@ class LoginView(ObtainAuthToken):
         
     
 class LogoutView(APIView):
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
@@ -83,7 +101,6 @@ class LogoutView(APIView):
         if user:
             
             token = Token.objects.get(user = user)
-            print(token)
             if token:
                 token.delete()
                 return Response({'message': 'Successful logout'}, status=status.HTTP_200_OK)
@@ -113,6 +130,9 @@ class SortMovieView(APIView):
         methods=['get'],
         operation_description="Sort all movies and series in the database by name, type, genre or score.",
         responses={200: "Successful response", 400: "Invalid sort field"},
+        manual_parameters=[
+        openapi.Parameter('by', openapi.IN_QUERY, description="sort by name, type, genre or score", type=openapi.TYPE_STRING),
+        ]
     )
     @action(detail=False, methods=['get'])
     def get(self, request):
@@ -131,6 +151,11 @@ class FilterMovieView(APIView):
         methods=['get'],
         operation_description="Filter all movies and series in the database by name, type and genre.",
         responses={200: "Successful response", 400: "Invalid filter field"},
+        manual_parameters=[
+        openapi.Parameter('name', openapi.IN_QUERY, description="filter by name", type=openapi.TYPE_STRING),
+        openapi.Parameter('type', openapi.IN_QUERY, description="filter by type", type=openapi.TYPE_STRING),
+        openapi.Parameter('genre', openapi.IN_QUERY, description="filter by genre", type=openapi.TYPE_STRING),
+        ]
     )
     @action(detail=False, methods=['get'])
     def get(self, request):
@@ -181,13 +206,20 @@ class AddVisualizationMovieView(APIView):
             return Response({'error': 'User already seen this movie'}, status=status.HTTP_400_BAD_REQUEST)
 
 class AddScoreMovieView(APIView):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(
         methods=['patch'],
         operation_description="Protected endpoint. A user can rate a movie and its average score is updated.",
-        responses={200: "Successful response", 404: "Not found", 400: "User already rated this movie", 400: "Invalid score", 401: "Unauthorized"},
+        responses={200: "Successful response", 404: "Not found", 400: "User already rated this movie", 401: "Unauthorized"},
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'score': openapi.Schema(type=openapi.TYPE_NUMBER, description='Score of the movie or serie')
+            },
+            required=['score'],
+        )
     )
     @action(detail=False, methods=['patch'])
     def patch(self, request, id):
@@ -209,9 +241,9 @@ class AddScoreMovieView(APIView):
                 return Response({'error': 'Score must be between 0 and 5'}, status=status.HTTP_400_BAD_REQUEST)
             
             total_sum = (movie.qty_score * movie.score) + score
-            new_score = round(total_sum / (movie.visualizations), 2)
-            movie.score = new_score
             movie.qty_score += 1
+            new_score = round(total_sum / (movie.qty_score), 2)
+            movie.score = new_score
             interaction.score = True
             movie.save()
             interaction.save()
