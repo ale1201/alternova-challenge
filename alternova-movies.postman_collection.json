@@ -1,0 +1,568 @@
+{
+	"info": {
+		"_postman_id": "0c247c52-9a23-40e2-aa61-97662907a1fe",
+		"name": "alternova-movies",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12849813"
+	},
+	"item": [
+		{
+			"name": "movies/registration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.equal(\"User registered successfully\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "user",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "prueba2023",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "prueba@gmail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ale1220.pythonanywhere.com/api/movies/registration",
+					"protocol": "https",
+					"host": [
+						"ale1220",
+						"pythonanywhere",
+						"com"
+					],
+					"path": [
+						"api",
+						"movies",
+						"registration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "movies/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonResponse = pm.response.json();\r",
+							"\r",
+							"pm.collectionVariables.set(\"token\", jsonResponse.token);\r",
+							"\r",
+							"pm.test(\"Status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.equal(\"Successful Login\");\r",
+							"    pm.expect(pm.response.json().user.username).to.equal(\"user\");\r",
+							"    pm.expect(pm.response.json().user.email).to.equal(\"prueba@gmail.com\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "user",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "prueba2023",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ale1220.pythonanywhere.com/api/movies/login",
+					"protocol": "https",
+					"host": [
+						"ale1220",
+						"pythonanywhere",
+						"com"
+					],
+					"path": [
+						"api",
+						"movies",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "movies/random",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message\", function () {\r",
+							"    pm.expect(pm.response.json()).to.have.property('id');\r",
+							"    pm.expect(pm.response.json().name).not.to.be.empty;\r",
+							"    pm.expect(pm.response.json().genre).not.to.be.empty;\r",
+							"    pm.expect(pm.response.json().type).not.to.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 1232791ad626dacdc017c6afec56cef63094a8e0",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://ale1220.pythonanywhere.com/api/movies/random",
+					"protocol": "https",
+					"host": [
+						"ale1220",
+						"pythonanywhere",
+						"com"
+					],
+					"path": [
+						"api",
+						"movies",
+						"random"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "movies/sort",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var res = pm.response.json();\r",
+							"\r",
+							"res.forEach(function(elem) {\r",
+							"    pm.test(elem.id, function() {\r",
+							"        pm.expect(elem.name).not.to.be.empty;\r",
+							"        pm.expect(elem).to.have.property('id');\r",
+							"        pm.expect(elem.genre).not.to.be.empty;\r",
+							"        pm.expect(elem.type).not.to.be.empty;\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ale1220.pythonanywhere.com/api/movies/sort?by=genre",
+					"protocol": "https",
+					"host": [
+						"ale1220",
+						"pythonanywhere",
+						"com"
+					],
+					"path": [
+						"api",
+						"movies",
+						"sort"
+					],
+					"query": [
+						{
+							"key": "by",
+							"value": "genre"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "movies/filter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var res = pm.response.json();\r",
+							"\r",
+							"res.forEach(function(elem) {\r",
+							"    pm.test(elem.id, function() {\r",
+							"        pm.expect(elem.type).to.equal(\"movie\");\r",
+							"        pm.expect(elem.name).to.include(\"s\");\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ale1220.pythonanywhere.com/api/movies/filter?name=s&type=movie",
+					"protocol": "https",
+					"host": [
+						"ale1220",
+						"pythonanywhere",
+						"com"
+					],
+					"path": [
+						"api",
+						"movies",
+						"filter"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "s"
+						},
+						{
+							"key": "type",
+							"value": "movie"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "movies/id/views",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message\", function () {\r",
+							"    pm.expect(pm.response.json()).to.have.property('id');\r",
+							"    pm.expect(pm.response.json().name).not.to.be.empty;\r",
+							"    pm.expect(pm.response.json().genre).not.to.be.empty;\r",
+							"    pm.expect(pm.response.json().type).not.to.be.empty;\r",
+							"    pm.expect(pm.response.json().visualizations).to.equal(1);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://ale1220.pythonanywhere.com/api/movies/2/views",
+					"protocol": "https",
+					"host": [
+						"ale1220",
+						"pythonanywhere",
+						"com"
+					],
+					"path": [
+						"api",
+						"movies",
+						"2",
+						"views"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "movies/id/views fail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 201\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message\", function () {\r",
+							"    pm.expect(pm.response.json().error).to.equal(\"User already seen this movie\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://ale1220.pythonanywhere.com/api/movies/2/views",
+					"protocol": "https",
+					"host": [
+						"ale1220",
+						"pythonanywhere",
+						"com"
+					],
+					"path": [
+						"api",
+						"movies",
+						"2",
+						"views"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "movies/id/score",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message\", function () {\r",
+							"    pm.expect(pm.response.json()).to.have.property('id');\r",
+							"    pm.expect(pm.response.json().name).not.to.be.empty;\r",
+							"    pm.expect(pm.response.json().genre).not.to.be.empty;\r",
+							"    pm.expect(pm.response.json().type).not.to.be.empty;\r",
+							"    pm.expect(pm.response.json().qty_score).to.equal(1);\r",
+							"    pm.expect(pm.response.json().score).to.equal(4.0);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"score\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://ale1220.pythonanywhere.com/api/movies/2/score",
+					"protocol": "https",
+					"host": [
+						"ale1220",
+						"pythonanywhere",
+						"com"
+					],
+					"path": [
+						"api",
+						"movies",
+						"2",
+						"score"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "movies/id/score fail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 201\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message\", function () {\r",
+							"    pm.expect(pm.response.json().error).to.equal(\"User already rated this movie\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"score\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://ale1220.pythonanywhere.com/api/movies/2/score",
+					"protocol": "https",
+					"host": [
+						"ale1220",
+						"pythonanywhere",
+						"com"
+					],
+					"path": [
+						"api",
+						"movies",
+						"2",
+						"score"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "movies/logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.equal(\"Successful logout\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://ale1220.pythonanywhere.com/api/movies/logout",
+					"protocol": "https",
+					"host": [
+						"ale1220",
+						"pythonanywhere",
+						"com"
+					],
+					"path": [
+						"api",
+						"movies",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
