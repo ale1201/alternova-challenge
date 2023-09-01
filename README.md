@@ -19,9 +19,11 @@ Adicional al repositorio, la aplicación se encuentra alojada en el hosting de p
 
 La aplicación cuenta con la documentación de los endpoints. Para acceder a esta, sería bajo la url '/docs', por ejemplo [https://ale1220.pythonanywhere.com/docs/](https://ale1220.pythonanywhere.com/docs/). Esta documentación fue generada con Swagger y desde acá también se pueden probar endpoints (por ejemplo endpoints con peticiones diferentes a /GET/).
 
-La aplicación cuenta con Autenticacion y hay endpoints que requieren de esta para su funcionamiento. Se manejaron 2 tipos de autenticacion: Basic authentication (para poder hacer pruebas desde swagger, esta es con inicio de sesión básico) y Token authentication (para hacer pruebas con postman mandando el token de sesión en los headers de las peticiones)
+La aplicación cuenta con Autenticacion y hay endpoints que requieren de esta para su funcionamiento. Se manejaron 2 tipos de autenticacion: Basic authentication (para poder hacer pruebas desde swagger, esta es con inicio de sesión básico) y Token authentication (para hacer pruebas con postman mandando el token de sesión en los headers de las peticiones).
 
-Si se desea hacer pruebas con un usuario que no es superuser y no se quiere crear una cuenta, puede hacer uso de las predenciales-> username: kiro, password: prueba2023
+El repositorio cuenta con una colección en postman que prueba los endpoint directamente al servicio de hosting. Hay que tener en cuenta que para este caso, la colección se puede correr una vez únicamente, debido a que hace validaciones que cambian sus valores (por ejemplo el número de visualizaciones) después de que se corra la primera vez.
+
+Si se desea hacer pruebas con un usuario que no es superuser y no se quiere crear una cuenta, puede hacer uso de las credenciales-> username: kiro, password: prueba2023
 
 ### Endpoints
 * GET /api/movies/filter: Este endpoint filtra las películas por nombre, tipo y genero (para el caso del nombre, se buscan peliculas que en el nombre contengan la palabra mandada). Para su funcionamiento se debe pasar por query params los filtros que se desean aplicar, por ejemplo: 'https://ale1220.pythonanywhere.com/api/movies/filter?genre=comedia' o 'https://ale1220.pythonanywhere.com/api/movies/filter?name=t&type=serie', el primero filtra por género y el segundo filtra por nombre de la película y tipo. Este endpoint responde al tercer requerimiento solicitado en la prueba.
