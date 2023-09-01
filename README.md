@@ -13,4 +13,8 @@ Para lanzar el servidor, se usa el comando `python manage.py runserver`. Al ejec
 La aplicación cuenta con tests que prueban las funcionalidades de los diferentes endpoints creados. Estos tests se pueden correr teniendo el repositorio clonado localmente y siguiendo los pasos proporcionados para el despliegue. Sin embargo, en este caso para correr los tests se hace uso del comando `python manage.py test`, lo que ejecuta 24 tests creados para probar los endpoints.
 
 ## Aplicación alojada en hosting
-Adicional al repositorio, la aplicación se encuentra alojada en el hosting de pythonanywhere, bajo el link: [](https://ale1220.pythonanywhere.com/).
+Adicional al repositorio, la aplicación se encuentra alojada en el hosting de pythonanywhere, bajo el link: [](https://ale1220.pythonanywhere.com/). La aplicación cuenta con su probia DB con datos previamente cargados para hacer pruebas y poder manpular los endpoints con esos datos.
+
+## Especificaciones de la aplicación
+* La aplicación cuenta con la documentación de los endpoints. Para acceder a esta, sería bajo la url '/docs', por ejemplo [](https://ale1220.pythonanywhere.com/docs/). Esta documentación fue generada con Swagger y desde acá también se pueden probar endpoints (por ejemplo endpoints con peticiones diferentes a /GET/).
+* La aplicación cuenta con Autenticacion y hay endpoints que requieren de esta para su funcionamiento. Se manejaron 2 tipos de autenticacion: Basic authentication (para poder hacer pruebas desde swagger) y Token authentication (para hacer pruebas con postman mandando el token de sesión en los headers de las peticiones)
